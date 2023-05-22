@@ -43,6 +43,7 @@
 
 #include "DeckLinkAPI.h"
 
+
 class BMDConfig
 {
 public:

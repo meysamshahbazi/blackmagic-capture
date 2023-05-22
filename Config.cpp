@@ -46,11 +46,11 @@
 #include "Config.h"
 
 BMDConfig::BMDConfig() :
-	m_deckLinkIndex(-1),
-	m_displayModeIndex(-2),
+	m_deckLinkIndex(0),
+	m_displayModeIndex(-1),
 	m_audioChannels(2),
 	m_audioSampleDepth(16),
-	m_maxFrames(-1),
+	m_maxFrames(10),
 	m_inputFlags(bmdVideoInputFlagDefault),
 	m_pixelFormat(bmdFormat8BitYUV),
 	m_timecodeFormat(),

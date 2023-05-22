@@ -84,39 +84,21 @@ ULONG DeckLinkCaptureDelegate::Release(void)
 	return newRefValue;
 }
 
-HRESULT DeckLinkCaptureDelegate::VideoInputFrameArrived(IDeckLinkVideoInputFrame* videoFrame, IDeckLinkAudioInputPacket* audioFrame)
+HRESULT DeckLinkCaptureDelegate::VideoInputFrameArrived(IDeckLinkVideoInputFrame* videoFrame , IDeckLinkAudioInputPacket* audioFrame )
 {
-	IDeckLinkVideoFrame*				rightEyeFrame = NULL;
 	IDeckLinkVideoFrame3DExtensions*	threeDExtensions = NULL;
 	void*								frameBytes;
-	void*								audioFrameBytes;
 
 	// Handle Video Frame
-	if (videoFrame)
-	{
-		// If 3D mode is enabled we retreive the 3D extensions interface which gives.
-		// us access to the right eye frame by calling GetFrameForRightEye() .
-		if ( (videoFrame->QueryInterface(IID_IDeckLinkVideoFrame3DExtensions, (void **) &threeDExtensions) != S_OK) ||
-			(threeDExtensions->GetFrameForRightEye(&rightEyeFrame) != S_OK))
-		{
-			rightEyeFrame = NULL;
-		}
-
-		if (threeDExtensions)
-			threeDExtensions->Release();
-
-		if (videoFrame->GetFlags() & bmdFrameHasNoInputSource)
-		{
+	if (videoFrame) {
+		if (videoFrame->GetFlags() & bmdFrameHasNoInputSource) {
 			printf("Frame received (#%lu) - No input signal detected\n", g_frameCount);
 		}
-		else
-		{
+		else {
 			const char *timecodeString = NULL;
-			if (g_config.m_timecodeFormat != 0)
-			{
+			if (g_config.m_timecodeFormat != 0) {
 				IDeckLinkTimecode *timecode;
-				if (videoFrame->GetTimecode(g_config.m_timecodeFormat, &timecode) == S_OK)
-				{
+				if (videoFrame->GetTimecode(g_config.m_timecodeFormat, &timecode) == S_OK) {
 					timecode->GetString(&timecodeString);
 				}
 			}
@@ -124,43 +106,22 @@ HRESULT DeckLinkCaptureDelegate::VideoInputFrameArrived(IDeckLinkVideoInputFrame
 			printf("Frame received (#%lu) [%s] - %s - Size: %li bytes\n",
 				g_frameCount,
 				timecodeString != NULL ? timecodeString : "No timecode",
-				rightEyeFrame != NULL ? "Valid Frame (3D left/right)" : "Valid Frame",
+				"Valid Frame",
 				videoFrame->GetRowBytes() * videoFrame->GetHeight());
 
 			if (timecodeString)
 				free((void*)timecodeString);
 
-			if (g_videoOutputFile != -1)
-			{
+			if (g_videoOutputFile != -1) {
 				videoFrame->GetBytes(&frameBytes);
 				write(g_videoOutputFile, frameBytes, videoFrame->GetRowBytes() * videoFrame->GetHeight());
-
-				if (rightEyeFrame)
-				{
-					rightEyeFrame->GetBytes(&frameBytes);
-					write(g_videoOutputFile, frameBytes, videoFrame->GetRowBytes() * videoFrame->GetHeight());
-				}
 			}
 		}
-
-		if (rightEyeFrame)
-			rightEyeFrame->Release();
 
 		g_frameCount++;
 	}
 
-	// Handle Audio Frame
-	if (audioFrame)
-	{
-		if (g_audioOutputFile != -1)
-		{
-			audioFrame->GetBytes(&audioFrameBytes);
-			write(g_audioOutputFile, audioFrameBytes, audioFrame->GetSampleFrameCount() * g_config.m_audioChannels * (g_config.m_audioSampleDepth / 8));
-		}
-	}
-
-	if (g_config.m_maxFrames > 0 && videoFrame && g_frameCount >= g_config.m_maxFrames)
-	{
+	if (g_config.m_maxFrames > 0 && videoFrame && g_frameCount >= g_config.m_maxFrames) {
 		g_do_exit = true;
 		pthread_cond_signal(&g_sleepCond);
 	}
