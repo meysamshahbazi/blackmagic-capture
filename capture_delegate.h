@@ -38,10 +38,35 @@
 ** -LICENSE-END-
 */
 
-#ifndef __CAPTURE_H__
-#define __CAPTURE_H__
+#ifndef __CAPTURE_DELEGATE_H__
+#define __CAPTURE_DELEGATE_H__
 
 #include "DeckLinkAPI.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <csignal>
+
+#include "Config.h"
+
+
+static pthread_mutex_t	g_sleepMutex;
+static pthread_cond_t	g_sleepCond;
+
+
+static int				g_audioOutputFile = -1;
+static bool				g_do_exit = false;
+
+static BMDConfig		g_config;
+
+static IDeckLinkInput*	g_deckLinkInput = NULL;
+
+static unsigned long	g_frameCount = 0;
+
 
 class DeckLinkCaptureDelegate : public IDeckLinkInputCallback
 {

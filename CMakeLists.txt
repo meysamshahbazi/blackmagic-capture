@@ -20,13 +20,14 @@ SET(PLATFORM_SOURCES
 LIST(APPEND PLATFORM_LIBRARIES dl pthread)
 
 SET(APP_HEADERS
-        Capture.h
+        capture_delegate.h
         Config.h
         )
 
 SET(APP_SOURCES
         main.cpp
         Config.cpp
+        capture_delegate.cpp
         ${APP_HEADERS}
         )
 
