@@ -47,13 +47,13 @@ static pthread_cond_t	g_sleepCond;
 
 static bool				g_do_exit = false;
 
-// static void sigfunc(int signum)
-// {
-// 	if (signum == SIGINT || signum == SIGTERM)
-// 		g_do_exit = true;
+static void sigfunc(int signum)
+{
+	if (signum == SIGINT || signum == SIGTERM)
+		g_do_exit = true;
 
-// 	pthread_cond_signal(&g_sleepCond);
-// }
+	pthread_cond_signal(&g_sleepCond);
+}
 
 
 
@@ -61,6 +61,10 @@ int main(int argc, char *argv[])
 {
 	pthread_mutex_init(&g_sleepMutex, NULL);
 	pthread_cond_init(&g_sleepCond, NULL);
+
+	signal(SIGINT, sigfunc);
+	signal(SIGTERM, sigfunc);
+	signal(SIGHUP, sigfunc);
 
 	BMCapture bmc;
 	bmc.run();
@@ -70,6 +74,7 @@ int main(int argc, char *argv[])
 		pthread_cond_wait(&g_sleepCond, &g_sleepMutex);
 		pthread_mutex_unlock(&g_sleepMutex);
 	}
+	printf("exit from program...\n");	
 
 	return 1;
 }
