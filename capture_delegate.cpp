@@ -53,7 +53,7 @@ HRESULT DeckLinkCaptureDelegate::VideoInputFrameArrived(IDeckLinkVideoInputFrame
 			// 	timecodeString != NULL ? timecodeString : "No timecode", "Valid Frame",
 			// 	videoFrame->GetRowBytes() * videoFrame->GetHeight());
 
-
+			// -------------OPEN CV FRAME DISPLAY-----------------------------
 			void* frameBytes;
 			videoFrame->GetBytes(&frameBytes);
 			cv::Mat im(videoFrame->GetHeight(), videoFrame->GetWidth(), CV_8UC2,frameBytes);
@@ -62,8 +62,7 @@ HRESULT DeckLinkCaptureDelegate::VideoInputFrameArrived(IDeckLinkVideoInputFrame
 			cv::resize(img_bgr,img_bgr,cv::Size(3840*3/4,2160*3/4));
 			cv::imshow("frame",img_bgr);
 			cv::waitKey(1);
-			
-			
+			// -------------END OF OPEN CV FRAME DISPLAY-----------------------------
 			if (timecodeString)
 				free((void*)timecodeString);
 		}
