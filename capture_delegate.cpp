@@ -1,5 +1,9 @@
 #include "capture_delegate.h"
 
+
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+
 DeckLinkCaptureDelegate::DeckLinkCaptureDelegate(BMDConfig* m_config, IDeckLinkInput* m_deckLinkInput) : 
 	m_refCount(1),
 	m_pixelFormat(bmdFormat8BitYUV),
@@ -45,10 +49,21 @@ HRESULT DeckLinkCaptureDelegate::VideoInputFrameArrived(IDeckLinkVideoInputFrame
 				}
 			}
 
-			printf("Frame received (#%lu) [%s] - %s - Size: %li bytes\n", m_frameCount,
-				timecodeString != NULL ? timecodeString : "No timecode", "Valid Frame",
-				videoFrame->GetRowBytes() * videoFrame->GetHeight());
+			// printf("Frame received (#%lu) [%s] - %s - Size: %li bytes\n", m_frameCount,
+			// 	timecodeString != NULL ? timecodeString : "No timecode", "Valid Frame",
+			// 	videoFrame->GetRowBytes() * videoFrame->GetHeight());
 
+
+			void* frameBytes;
+			videoFrame->GetBytes(&frameBytes);
+			cv::Mat im(videoFrame->GetHeight(), videoFrame->GetWidth(), CV_8UC2,frameBytes);
+			cv::Mat img_bgr;
+			cv::cvtColor(im,img_bgr,cv::COLOR_YUV2BGR_UYVY); //3840*2160
+			cv::resize(img_bgr,img_bgr,cv::Size(3840*3/4,2160*3/4));
+			cv::imshow("frame",img_bgr);
+			cv::waitKey(1);
+			
+			
 			if (timecodeString)
 				free((void*)timecodeString);
 		}

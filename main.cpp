@@ -55,8 +55,6 @@ static void sigfunc(int signum)
 	pthread_cond_signal(&g_sleepCond);
 }
 
-
-
 int main(int argc, char *argv[])
 {
 	pthread_mutex_init(&g_sleepMutex, NULL);

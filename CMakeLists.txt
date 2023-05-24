@@ -17,6 +17,8 @@ SET(PLATFORM_SOURCES
         ${DECKLINK_SDK_INCLUDE_DIR}/DeckLinkAPIDispatch.cpp
         )
 
+find_package(OpenCV REQUIRED)
+
 LIST(APPEND PLATFORM_LIBRARIES dl pthread)
 
 SET(APP_HEADERS
@@ -38,13 +40,15 @@ ADD_EXECUTABLE(${PROJECT_NAME}
         ${PLATFORM_SOURCES}
         )
 
-TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE
-        ${DECKLINK_SDK_INCLUDE_DIR}
-        )
+TARGET_INCLUDE_DIRECTORIES(     ${PROJECT_NAME} PRIVATE
+                                ${DECKLINK_SDK_INCLUDE_DIR}
+                                ${OpenCV_INCLUDE_DIRS} 
+                                )
 
 # ADD_DEFINITIONS(-DOPENCV_DIR=${OpenCV_DIR}) # Used at runtime to load the cascade classifier XML file
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-        ${PLATFORM_LIBRARIES}
-        )
+TARGET_LINK_LIBRARIES(  ${PROJECT_NAME}
+                        ${PLATFORM_LIBRARIES}
+                        ${OpenCV_LIBS}
+                        )
 
