@@ -42,18 +42,10 @@
 #include "DeckLinkAPI.h"
 #include "capture_delegate.h"
 
-
 static pthread_mutex_t	g_sleepMutex;
 static pthread_cond_t	g_sleepCond;
 
-
 static bool				g_do_exit = false;
-
-static BMDConfig		g_config;
-
-// static IDeckLinkInput*	g_deckLinkInput = NULL;
-
-
 
 // static void sigfunc(int signum)
 // {
@@ -67,24 +59,17 @@ static BMDConfig		g_config;
 
 int main(int argc, char *argv[])
 {
-	
-
 	pthread_mutex_init(&g_sleepMutex, NULL);
 	pthread_cond_init(&g_sleepCond, NULL);
-
-	
 
 	BMCapture bmc;
 	bmc.run();
 	while (!g_do_exit)
 	{
-		
-
 		pthread_mutex_lock(&g_sleepMutex);
 		pthread_cond_wait(&g_sleepCond, &g_sleepMutex);
 		pthread_mutex_unlock(&g_sleepMutex);
 	}
-
 
 	return 1;
 }
