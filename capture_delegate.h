@@ -60,7 +60,7 @@
 class DeckLinkCaptureDelegate : public IDeckLinkInputCallback
 {
 public:
-	DeckLinkCaptureDelegate();
+	DeckLinkCaptureDelegate( BMDConfig* m_config, IDeckLinkInput* m_deckLinkInput );
 
 	virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv) { return E_NOINTERFACE; }
 	virtual ULONG STDMETHODCALLTYPE AddRef(void);
@@ -71,6 +71,12 @@ public:
 private:
 	int32_t				m_refCount;
 	BMDPixelFormat		m_pixelFormat;
+	unsigned long	m_frameCount{0};
+	BMDConfig* m_config;
+	IDeckLinkInput*	m_deckLinkInput{NULL};
+	bool quit{false};
+	
+
 };
 
 #endif
