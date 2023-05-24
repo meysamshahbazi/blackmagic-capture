@@ -54,18 +54,7 @@
 #include "Config.h"
 
 
-static pthread_mutex_t	g_sleepMutex;
-static pthread_cond_t	g_sleepCond;
 
-
-static int				g_audioOutputFile = -1;
-static bool				g_do_exit = false;
-
-static BMDConfig		g_config;
-
-static IDeckLinkInput*	g_deckLinkInput = NULL;
-
-static unsigned long	g_frameCount = 0;
 
 
 class DeckLinkCaptureDelegate : public IDeckLinkInputCallback
