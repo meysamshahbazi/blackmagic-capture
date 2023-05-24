@@ -9,7 +9,7 @@ SET(CMAKE_CXX_STANDARD 14)
 # endif ()
 
 
-set(DECKLINK_SDK_INCLUDE_DIR /home/meysam/Downloads/BlackMagic/Blackmagic_DeckLink_SDK_12.4.2/Linux/include)
+set(DECKLINK_SDK_INCLUDE_DIR /home/meysam/BlackMagic/Blackmagic_DeckLink_SDK_12.4.2/Linux/include)
 
     # Add DeckLink API
 SET(PLATFORM_SOURCES
