@@ -22,12 +22,14 @@ LIST(APPEND PLATFORM_LIBRARIES dl pthread)
 SET(APP_HEADERS
         capture_delegate.h
         Config.h
+        bmcapture.h
         )
 
 SET(APP_SOURCES
         main.cpp
         Config.cpp
         capture_delegate.cpp
+        bmcapture.cpp
         ${APP_HEADERS}
         )
 
