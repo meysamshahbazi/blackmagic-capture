@@ -58,28 +58,28 @@ HRESULT DeckLinkCaptureDelegate::VideoInputFrameArrived(IDeckLinkVideoInputFrame
 			videoFrame->GetBytes(&frameBytes);
 
 			unsigned char *yuyv = (unsigned char *)frameBytes;
-			unsigned char *y_channel = new unsigned char[1920*1080];
+			// unsigned char *y_channel = new unsigned char[1920*1080];
 			
-			for (int i{0}; i <1920;i++) {
-				for (int j{0}; j <1080;j++) {
-					y_channel[i+1920*j] = (unsigned char)yuyv[1+2*i+1920*2*j];
-				}
-			}
+			// for (int i{0}; i <1920;i++) {
+			// 	for (int j{0}; j <1080;j++) {
+			// 		y_channel[i+1920*j] = (unsigned char)yuyv[1+2*i+1920*2*j];
+			// 	}
+			// }
 
-			cv::Mat im(videoFrame->GetHeight(), videoFrame->GetWidth(), CV_8UC1,y_channel);
-			cv::Mat img_bgr;
-			cv::cvtColor(im,img_bgr,cv::COLOR_GRAY2BGR); //3840*2160
-			cv::resize(img_bgr,img_bgr,cv::Size(3840*3/4,2160*3/4));
-			cv::imshow("frame",img_bgr);
-			cv::waitKey(1);
-
-
-			// cv::Mat im(videoFrame->GetHeight(), videoFrame->GetWidth(), CV_8UC2,frameBytes);
+			// cv::Mat im(videoFrame->GetHeight(), videoFrame->GetWidth(), CV_8UC1,y_channel);
 			// cv::Mat img_bgr;
-			// cv::cvtColor(im,img_bgr,cv::COLOR_YUV2BGR_UYVY); //3840*2160
-			// cv::resize(img_bgr,img_bgr,cv::Size(3840*3/4,2160*3/4));
+			// cv::cvtColor(im,img_bgr,cv::COLOR_GRAY2BGR); //3840*2160
+			// // cv::resize(img_bgr,img_bgr,cv::Size(3840*3/4,2160*3/4));
 			// cv::imshow("frame",img_bgr);
 			// cv::waitKey(1);
+
+
+			cv::Mat im(videoFrame->GetHeight(), videoFrame->GetWidth(), CV_8UC2,frameBytes);
+			cv::Mat img_bgr;
+			cv::cvtColor(im,img_bgr,cv::COLOR_YUV2BGR_UYVY); //3840*2160
+			// cv::resize(img_bgr,img_bgr,cv::Size(3840*3/4,2160*3/4));
+			cv::imshow("frame",img_bgr);
+			cv::waitKey(1);
 			// -------------END OF OPEN CV FRAME DISPLAY-----------------------------
 			
 			if (timecodeString)
